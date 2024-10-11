@@ -20,11 +20,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r MyFunction/requirements.txt  # Point to the correct path
+          pip install -r MyFunction/requirements.txt  # Ensure the path is correct
 
       - name: Run tests
         run: |
-          python -m unittest discover -s MyFunction/test  # Update this based on your testing structure
+          pytest MyFunction/test  # Run pytest for your tests
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,4 +41,4 @@ jobs:
 
       - name: Deploy to Azure
         run: |
-          az deployment group create --resource-group ResourceWaqas --template-file Infrastructure/template.json  # Adjust the path to your template file
+          az deployment group create --resource-group ResourceWaqas --template-file Infrastructure/template.json
