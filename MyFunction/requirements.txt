@@ -5,4 +5,5 @@
 azure-functions
 azure-cosmos  
 pytest
+pytest-mock
 
