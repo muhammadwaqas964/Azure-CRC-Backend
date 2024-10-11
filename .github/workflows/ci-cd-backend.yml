@@ -26,7 +26,7 @@ jobs:
         env:
           PYTHONPATH: MyFunction  # Add MyFunction to the Python path
         run: |
-          pytest test  # Run pytest from the MyFunction directory
+          pytest MyFunction/test  # Run pytest pointing to the correct test directory
 
   deploy:
     runs-on: ubuntu-latest
