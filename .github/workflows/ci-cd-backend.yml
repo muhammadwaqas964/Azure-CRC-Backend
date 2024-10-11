@@ -23,8 +23,10 @@ jobs:
           pip install -r MyFunction/requirements.txt  # Ensure the path is correct
 
       - name: Run tests
+        env:
+          PYTHONPATH: MyFunction  # Add MyFunction to the Python path
         run: |
-          pytest MyFunction/test  # Run pytest for your tests
+          pytest test  # Run pytest from the MyFunction directory
 
   deploy:
     runs-on: ubuntu-latest
