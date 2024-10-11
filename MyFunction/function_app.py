@@ -5,7 +5,7 @@ import json
 from azure.cosmos import CosmosClient, exceptions
 
 # Initialize CosmosDB client with your specific details
-endpoint = "https://waqasdatabase.documents.azure.com:443/"
+endpoint = os.environ.get("COSMOS_DB_ENDPOINT")
 key = os.environ.get("COSMOS_DB_KEY")  # Fetch the key from an environment variable
 database_name = "waqasdb"
 container_name = "counter"
