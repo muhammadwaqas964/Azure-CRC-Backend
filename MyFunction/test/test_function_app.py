@@ -1,12 +1,6 @@
-import pytest
 from unittest import mock
-from function_app import http_triggerwaqas  # Correct import statement
-
-# Mocking the CosmosClient
-@pytest.fixture(autouse=True)
-def mock_cosmos_client():
-    with mock.patch('function_app.CosmosClient') as MockClient:
-        yield MockClient
+import pytest
+from function_app import http_triggerwaqas
 
 def mock_request():
     class MockRequest:
@@ -16,8 +10,9 @@ def mock_request():
 
     return MockRequest()
 
-def test_http_trigger_no_name(mocker):
-    mock_container = mocker.patch('function_app.container')  # Adjust according to your actual container path
+@mock.patch('function_app.CosmosClient')
+def test_http_trigger_no_name(mock_cosmos_client):
+    mock_container = mock_cosmos_client.return_value.container
     mock_container.read_item.return_value = {"id": "visitor_count", "count": 5}
     
     req = mock_request()
@@ -25,3 +20,4 @@ def test_http_trigger_no_name(mocker):
     
     assert response.status_code == 200
     assert "visitor_count" in response.get_body().decode()
+
