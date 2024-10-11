@@ -1,5 +1,12 @@
 import pytest
+from unittest import mock
 from function_app import http_triggerwaqas  # Correct import statement
+
+# Mocking the CosmosClient
+@pytest.fixture(autouse=True)
+def mock_cosmos_client():
+    with mock.patch('function_app.CosmosClient') as MockClient:
+        yield MockClient
 
 def mock_request():
     class MockRequest:
