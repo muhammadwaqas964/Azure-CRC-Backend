@@ -22,7 +22,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r MyFunction/requirements.txt
 
+    - name: Set environment variables
+      run: |
+        echo "COSMOS_DB_ENDPOINT=${{ secrets.COSMOS_DB_ENDPOINT }}" >> $GITHUB_ENV
+        echo "COSMOS_DB_KEY=${{ secrets.COSMOS_DB_KEY }}" >> $GITHUB_ENV
+
     - name: Run tests
       run: |
         cd MyFunction
-        python -m  pytest
+        pytest
