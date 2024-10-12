@@ -4,13 +4,18 @@ import logging
 import json
 from azure.cosmos import CosmosClient, exceptions
 
-# Initialize CosmosDB client with your specific details
+# Fetch CosmosDB client details from environment variables
 endpoint = os.environ.get("COSMOS_DB_ENDPOINT")
-key = os.environ.get("COSMOS_DB_KEY")  # Fetch the key from an environment variable
+key = os.environ.get("COSMOS_DB_KEY")
+
+# Debugging: Print environment variables
+print("COSMOS_DB_ENDPOINT:", endpoint)
+print("COSMOS_DB_KEY:", key)
+
 database_name = "waqasdb"
 container_name = "counter"
 
-client = CosmosClient(endpoint, key)
+client = CosmosClient(endpoint, credential=key)  # Use credential parameter for key
 database = client.get_database_client(database_name)
 container = database.get_container_client(container_name)
 
@@ -19,9 +24,7 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 @app.route(route="http_triggerwaqas")
 def http_triggerwaqas(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-    # Initialize visitor count variable
     visitor_count = 0
-    # Increment the visitor counter
     try:
         visitor_item = container.read_item(item="visitor_count", partition_key="visitor_count")
         visitor_count = visitor_item.get('count', 0)
@@ -35,15 +38,16 @@ def http_triggerwaqas(req: func.HttpRequest) -> func.HttpResponse:
         }
         container.create_item(visitor_item)
         visitor_count = 1
-    # Process the request for a name
+
     name = req.params.get('name')
     if not name:
         try:
             req_body = req.get_json()
         except ValueError:
-            req_body = None  # Ensure req_body is None if JSON parsing fails
-        if req_body:  # Add a check here to avoid AttributeError
+            req_body = None
+        if req_body:
             name = req_body.get('name')
+
     if name:
         return func.HttpResponse(
             json.dumps({"message": f"Hello, {name}. Your name has been added to the database.", "visitor_count": visitor_count}),
@@ -56,4 +60,3 @@ def http_triggerwaqas(req: func.HttpRequest) -> func.HttpResponse:
             status_code=200,
             mimetype="application/json"
         )
-
