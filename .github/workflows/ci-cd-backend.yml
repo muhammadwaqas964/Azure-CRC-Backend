@@ -25,4 +25,4 @@ jobs:
     - name: Run tests
       run: |
         cd MyFunction
-        pytest
+        python -m  pytest
